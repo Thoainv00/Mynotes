@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "875517872552",
+    "project_id": "mynotes-thoainv01",
+    "storage_bucket": "mynotes-thoainv01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875517872552:android:7078ac1aaaab9f5678759d",
+        "android_client_info": {
+          "package_name": "se.pxiolity.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkeppXGKg-_cdVALDxm5_zsz9IN6O8qi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
