@@ -32,7 +32,7 @@ void main() {
     routes: {
       '/login/': (context) => const LoginView(),
       '/register/': (context) => const RegisterView(),
-      '/homepage/': (context) => const NoteView()
+      '/notes/': (context) => const NoteView()
     },
   ));
 }
