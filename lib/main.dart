@@ -1,9 +1,3 @@
-// import 'package:firebase_core/firebase_core.dart';
-// import 'dart:js';
-
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'dart:js';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +7,6 @@ import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_view.dart';
 import 'dart:developer' as devtools show log;
-// import 'package:mynotes/views/register_view.dart';
-// import 'package:mynotes/views/login_view.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'firebase_options.dart';
 
 void log() {}
 
@@ -33,7 +23,8 @@ void main() {
     routes: {
       loginRoute: (context) => const LoginView(),
       registerRoute: (context) => const RegisterView(),
-      notesRoute: (context) => const NoteView()
+      notesRoute: (context) => const NoteView(),
+      verifyEmailRoute: (context) => const VerifyEmailView(),
     },
   ));
 }
