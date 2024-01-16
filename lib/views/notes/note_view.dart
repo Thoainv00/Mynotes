@@ -20,14 +20,7 @@ class _NoteViewState extends State<NoteView> {
   @override
   void initState() {
     _noteService = NoteService();
-    _noteService.open();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _noteService.close();
-    super.dispose();
   }
 
   @override
@@ -87,16 +80,35 @@ class _NoteViewState extends State<NoteView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
-                  stream: _noteService.allNote,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                      case ConnectionState.active:
-                        return const Text('Waiting for all notes...');
-                      default:
+                stream: _noteService.allNote,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.active:
+                      if (snapshot.hasData) {
+                        final allNote = snapshot.data as List<DatabaseNote>;
+                        return ListView.builder(
+                          itemCount: allNote.length,
+                          itemBuilder: (context, index) {
+                            final note = allNote[index];
+                            return ListTile(
+                              title: Text(
+                                note.text,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          },
+                        );
+                      } else {
                         return const CircularProgressIndicator();
-                    }
-                  });
+                      }
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                },
+              );
             default:
               return const CircularProgressIndicator();
           }

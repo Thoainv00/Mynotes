@@ -12,9 +12,9 @@ const noteTable = 'note';
 const userTable = 'user';
 const idColumn = 'id';
 const emailColumn = 'email';
-const userIdColumn = 'userId';
+const userIdColumn = 'user_id';
 const textColumn = 'text';
-const isSyncedWithCloudColumn = 'isSyncedWithCloud';
+const isSyncedWithCloudColumn = 'is_synced_with_cloud';
 const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
       "id"	INTEGER NOT NULL,
       "email"	TEXT NOT NULL UNIQUE,
@@ -34,11 +34,17 @@ class NoteService {
 
   List<DatabaseNote> _note = [];
   static final NoteService _shared = NoteService._sharedInstance();
-  NoteService._sharedInstance();
+  NoteService._sharedInstance() {
+    _noteStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _noteStreamController.sink.add(_note);
+      },
+    );
+  }
   factory NoteService() => _shared;
 
-  final _noteStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _noteStreamController;
+
   Stream<List<DatabaseNote>> get allNote => _noteStreamController.stream;
 
   Future<DatabaseUser> getOrCreateUser({required String email}) async {
@@ -59,8 +65,10 @@ class NoteService {
     _noteStreamController.add(_note);
   }
 
-  Future<DatabaseNote> updateNote(
-      {required DatabaseNote note, required String text}) async {
+  Future<DatabaseNote> updateNote({
+    required DatabaseNote note,
+    required String text,
+  }) async {
     await _ensureDbIsOpen();
 
     final db = _getDatabaseOrThrow();
@@ -229,7 +237,9 @@ class NoteService {
   Future<void> _ensureDbIsOpen() async {
     try {
       await open();
-    } on DatabaseAlreadyOpenException {}
+    } on DatabaseAlreadyOpenException {
+      // empty
+    }
   }
 
   Future<void> close() async {
