@@ -6,11 +6,6 @@ import 'package:mynotes/views/notes/new_note_view.dart';
 import 'package:mynotes/views/notes/note_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_view.dart';
-import 'dart:developer' as devtools show log;
-
-// import 'package:path/path.dart';
-
-void log() {}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +40,6 @@ class HomePage extends StatelessWidget {
             final user = AuthService.firebase().currentUser;
             if (user != null) {
               if (user.isEmailVerified) {
-                devtools.log('Hello world');
                 return const NoteView();
               } else {
                 return const VerifyEmailView();

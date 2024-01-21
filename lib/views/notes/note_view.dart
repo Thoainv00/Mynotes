@@ -5,6 +5,8 @@ import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/crud/note_service.dart';
+import 'package:mynotes/utilities/dialogs/logout_dialog.dart';
+import 'package:mynotes/views/notes/note_list_view.dart';
 
 class NoteView extends StatefulWidget {
   const NoteView({super.key});
@@ -20,6 +22,7 @@ class _NoteViewState extends State<NoteView> {
   @override
   void initState() {
     _noteService = NoteService();
+    _noteService.open();
     super.initState();
   }
 
@@ -87,20 +90,11 @@ class _NoteViewState extends State<NoteView> {
                     case ConnectionState.active:
                       if (snapshot.hasData) {
                         final allNote = snapshot.data as List<DatabaseNote>;
-                        return ListView.builder(
-                          itemCount: allNote.length,
-                          itemBuilder: (context, index) {
-                            final note = allNote[index];
-                            return ListTile(
-                              title: Text(
-                                note.text,
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
-                          },
-                        );
+                        return NoteListView(
+                            notes: allNote,
+                            onDeleteNote: (note) async {
+                              await _noteService.deleteNote(id: note.id);
+                            });
                       } else {
                         return const CircularProgressIndicator();
                       }
@@ -116,29 +110,6 @@ class _NoteViewState extends State<NoteView> {
       ),
     );
   }
-}
-
-Future<bool> showLogoutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Sign out'),
-          content: const Text('Are you sure you want to sign out?'),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Log out'))
-          ],
-        );
-      }).then((value) => value ?? false);
 }
 
 Future<bool> showHomepage(BuildContext context) {
